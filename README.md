@@ -10,5 +10,11 @@ Osu Wallpaper Replace Script
 
 
 Date: 2022/01/23
+
 Git 还用不明白 以后再搞
+
 要源文件的在下载里面的都可以直接看
+
+
+
+喜欢的话就给个Star吧
