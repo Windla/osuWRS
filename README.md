@@ -18,3 +18,5 @@ Git 还用不明白 以后再搞
 
 
 喜欢的话就给个Star吧
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/Windla/OsuWRS.svg)](https://starchart.cc/Windla/OsuWRS)
