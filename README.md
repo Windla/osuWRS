@@ -1,6 +1,6 @@
 # OsuWRS
 Osu Wallpaper Replace Script
-一个用于替换osu背景的脚本
+一个用于替换osu背景的脚本(CMD+Python)
 
 作者主页: https://space.bilibili.com/358002685
 
