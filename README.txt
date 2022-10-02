@@ -3,8 +3,9 @@
 教程地址:https://www.bilibili.com/video/BV1eq4y1g7sT  (这其实是旧教程)
 
 使用前说明:
-目前只能支持单文件替换
-如果想要一劳永逸,那就把 osuWRS.exe 当作osu!的启动器,osuWRS会自动检测ppy的更新
+待替换数量不能超过服务器bg数量, 否则死循环!
+最多不要超过25张(看运气)
+如果想要一劳永逸,那就把 OsuWRS.exe/OsuWRS.py 当作osu!的启动器,osuWRS会自动检测ppy的更新
 
 *使用方法:
 1.将osu的绝对路径放入config.ini(见获取方法)
@@ -32,9 +33,6 @@ A1:运行 osuWRS.exe 或者 - 手动触发更新 -.bat + osuWRS.exe
 Q2:修改失败
 A2:请查看config.ini是否只有一行,或者前后空格是否删除
    不要删除bg.php  如果删除了,请自行创建一个空文件
-
-Q3:为什么只支持单文件替换
-A3:因为不会
 
 
 贡献者:
