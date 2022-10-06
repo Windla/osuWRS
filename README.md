@@ -13,13 +13,10 @@ Osu Wallpaper Replace Script
 
 新版教程: https://www.bilibili.com/video/BV1o8411s7Bf/
 
-下载方式: 右上角Code - Download ZIP
+下载方式: 1. 右上角Code - Download ZIP
 
-Date: 2022/01/23
+2. https://github.com/Windla/OsuWRS/releases
 
-Git 还用不明白 以后再搞
-
-要源文件的在下载里面的都可以直接看
 
 
 
