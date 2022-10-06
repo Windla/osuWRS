@@ -6,11 +6,13 @@ import glob
 import requests
 import win32api
 import win32con
+from threading import Thread
 
-quick_start = 1  # 0：关闭 1:开启 | 默认 0
-overtime = 5  # 与ppy服务器连接的超时时间 | 默认 5
-version = "2.1.1"  # 当前版本号
+quick_start = 1  # 快速启动  0：关闭 1:开启 | 默认 0
+overtime = 5  # 连接ppy服务器超时时间 | 默认 5
+version = "2.2.0"  # 当前OsuWRS版本号
 OsuWRS_path = os.getcwd()  # 获取OsuWRS工作目录
+stop_threads = False  # 全局变量 virtual_key 线程运行&退出 | True: 不进行按键模拟
 
 os.system("title OsuWRS By -Windla- (Bilibili)")
 print("[!] OsuWRS作者: B站 @-Windla-")
@@ -19,53 +21,60 @@ print("[!] OsuWRS版本:", version)
 
 # bg刷新检测
 def get_bg_num():
-    bg_num_get = len(glob.glob(bgPath + "\\*.jpg"))
-    print("[+] 进度: 已获取" + str(bg_num_get) + "张服务器bg图")
-    return bg_num_get
+    num = len(glob.glob(bgPath + "\\*.jpg"))
+    return num
 
 
-# 按键模拟 | bg刷新 | 多线程需要(暂时舍弃)
+# 按键模拟
 def virtual_key():
-    # P*3
-    for i in range(3):
-        win32api.keybd_event(80, 0, 0, 0)
+    while True:
+        global stop_threads
+        if stop_threads:
+            break
+
+        # P * 3
+        for i in range(3):
+            win32api.keybd_event(80, 0, 0, 0)
+            time.sleep(0.02)
+            win32api.keybd_event(80, 0, win32con.KEYEVENTF_KEYUP, 0)
+            time.sleep(0.02)
+        time.sleep(0.25)
+        # ESC * 1
+        win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), 0, 0)
         time.sleep(0.02)
-        win32api.keybd_event(80, 0, win32con.KEYEVENTF_KEYUP, 0)
-        time.sleep(0.02)
-    time.sleep(0.25)
-    # ESC*1
-    win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), 0, 0)
-    time.sleep(0.02)
-    win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), win32con.KEYEVENTF_KEYUP, 0)
+        win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), win32con.KEYEVENTF_KEYUP, 0)
+        time.sleep(0.1)
 
 
-# 遍历更改文件名
+# 遍历更改bg文件名
 def rename(path, name):
-    num = 1
+    i = 1
     for file in os.listdir(path):
-        os.rename(os.path.join(path, file), os.path.join(path, name + str(num)) + ".jpg")
-        num += 1
+        os.rename(os.path.join(path, file), os.path.join(path, name + str(i)) + ".jpg")
+        i += 1
 
 
 # 检查待替换bg文件夹
 def bg_check():
-    num = 1
-    while True:
-        if not os.path.exists(OsuWRS_path + "\\bg\\bg_" + str(num) + ".jpg"):
+    i = 1
+    while i != bg_num + 1:
+        if not os.path.exists(OsuWRS_path + "\\bg\\bg_" + str(i) + ".jpg"):
             os.system('cls' if os.name == 'nt' else 'clear')
-            print("[-] 状态: 重新初始化bg文件名 | bg_" + str(num) + "丢失")
+            print("[-] 状态: 重新初始化bg文件名 | bg_" + str(i) + "丢失")
             rename(OsuWRS_path + "\\bg", "pre_bg_")
             rename(OsuWRS_path + "\\bg", "bg_")
             break
-        num += 1
+        i += 1
 
 
+# 解锁bg&删除旧bg
 def bg_update():
     os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f')
     for bg_file in glob.glob(bgPath + "\\" + "*.jpg"):
         os.remove(bg_file)
 
 
+# 锁定bg&替换新bg
 def bg_replace():
     os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f')
     os.system('md ' + Path + '\\Data\\bg_temp')
@@ -84,16 +93,67 @@ def bg_replace():
     os.system('echo y|cacls ' + bgPath + ' /t /p everyone:r')
 
 
+#  多线程 | bg刷新检测&剩余的步骤
+def thread_main():
+    i = 0
+    e = 0  # 错误计数
+    n = get_bg_num()
+    global stop_threads
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("[!] 提示: 请确保你的鼠标焦点位于osu!上, 不要移动!")
+    while n != bg_num:
+        n = get_bg_num()
+        time.sleep(0.01)  # 越小消耗越大但越精准
+        if i != n:
+            print("[+] 进度: 已获取" + str(n) + "张服务器bg图")
+            i = n
+            e = 0
+        else:
+            e += 1
+
+        # 防呆措施
+        if e >= 1000:  # 大约10s无进度
+            # 声明退出virtual_key线程
+            stop_threads = True
+            # 腾空屏幕为显示log准备
+            os.system("taskkill /F /IM osu!.exe")
+            with open("error.log", "w") as file:
+                file.write('[Error] 不要超过ppy的服务器上限! 目前是最高' + str(n) + '张可替换的bg图 | 或者检查您的网络')
+            win32api.ShellExecute(0, 'open', OsuWRS_path + "\\bg", '', '', 1)
+            time.sleep(2)
+            win32api.ShellExecute(0, 'open', OsuWRS_path + "\\error.log", '', '', 1)
+            exit()
+
+    # 杀死osu
+    os.system("taskkill /F /IM osu!.exe")
+    # 声明退出virtual_key线程
+    stop_threads = True
+    # ------------------------------------------------------
+    # 检查待替换bg
+    bg_check()
+    # 开始替换
+    bg_replace()
+    # 将新数据写入bg.php
+    with open("bg.php", "wb") as file:
+        file.write(ppyUrl)
+    # 启动osu(替换成功后)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("[+] 状态: 更新成功!")
+    time.sleep(1)
+    win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
+    exit()
+
+
 # ------------------------------初始化 | 配置文件读取---------------------------------
 # bg文件夹 | bg数量识别
 if not os.path.exists(OsuWRS_path + "\\bg"):
     os.mkdir(OsuWRS_path + "\\bg")
 bg_num = len(glob.glob(OsuWRS_path + "\\bg\\*.*"))
 if bg_num == 0:
-    print("[-] Error: 请在运行目录下的bg文件夹内放入待替换图片(只接受jpg/png格式|只能一张)")
+    print("[-] Error: 请在运行目录下的bg文件夹内放入待替换图片(只接受jpg/png格式 | 不建议超过10张)")
     time.sleep(5)
     exit()
-print("[!] bg待替换数量:", bg_num, "张\n[!] 提示: 替换速度与bg替换数量负相关 | 不建议超过5张")
+print("[!] bg待替换数量:", bg_num, "张\n[!] 提示: 替换速度与bg替换数量负相关 | 不建议超过10张")
 # config.ini
 try:
     with open("config.ini", 'r') as f:
@@ -143,29 +203,23 @@ if ppyUrl != ppyUrlOld:  # seasonal background 更新后开始进行 bg更新
     # 拉起osu
     win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
     time.sleep(3)
-    # 已下载bg数量检测
+    # 对osu启动的检测
     getnum = 0
-    while getnum != 0:
+    while getnum == 0:
         getnum = get_bg_num()
-        time.sleep(0.2)
+        time.sleep(0.1)
     time.sleep(3)
-    while getnum != bg_num:
-        virtual_key()
-        getnum = get_bg_num()
-    # 杀死osu
-    os.system("taskkill /F /IM osu!.exe")
-    # 检查待替换bg
-    bg_check()
-    # 开始替换
-    bg_replace()
-    # 将新数据写入bg.php
-    with open("bg.php", "wb") as f:
-        f.write(ppyUrl)
-    # 启动osu(替换成功后)
-    print("[+] 状态: 更新成功!")
-    time.sleep(3)
-    win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
+
+    # 尝试多进程以减少失误
+    thread_01 = Thread(target=thread_main)
+    thread_02 = Thread(target=virtual_key)
+    thread_01.start()
+    # 给 bg_num = 1 的反应时间
+    time.sleep(0.25)
+    thread_02.start()
+
 else:
     print("[+] 状态: 无更新!")
-    time.sleep(3)
-exit()
+    time.sleep(1)
+    if quick_start != 1:
+        win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
