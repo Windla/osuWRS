@@ -10,7 +10,7 @@ from threading import Thread
 
 quick_start = 1  # 快速启动  0：关闭 1:开启 | 默认 0
 overtime = 5  # 连接ppy服务器超时时间 | 默认 5
-version = "2.2.0"  # 当前OsuWRS版本号
+version = "2.2.1"  # 当前OsuWRS版本号
 OsuWRS_path = os.getcwd()  # 获取OsuWRS工作目录
 stop_threads = False  # 全局变量 virtual_key 线程运行&退出 | True: 不进行按键模拟
 
@@ -27,19 +27,20 @@ def get_bg_num():
 
 # 按键模拟
 def virtual_key():
+    global stop_threads
     while True:
-        global stop_threads
-        if stop_threads:
-            break
-
         # P * 3
         for i in range(3):
+            if stop_threads:
+                break
             win32api.keybd_event(80, 0, 0, 0)
             time.sleep(0.02)
             win32api.keybd_event(80, 0, win32con.KEYEVENTF_KEYUP, 0)
             time.sleep(0.02)
-        time.sleep(0.25)
+        time.sleep(0.5)
         # ESC * 1
+        if stop_threads:
+            break
         win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), 0, 0)
         time.sleep(0.02)
         win32api.keybd_event(0x1B, win32api.MapVirtualKey(0x1B, 0), win32con.KEYEVENTF_KEYUP, 0)
@@ -59,7 +60,6 @@ def bg_check():
     i = 1
     while i != bg_num + 1:
         if not os.path.exists(OsuWRS_path + "\\bg\\bg_" + str(i) + ".jpg"):
-            os.system('cls' if os.name == 'nt' else 'clear')
             print("[-] 状态: 重新初始化bg文件名 | bg_" + str(i) + "丢失")
             rename(OsuWRS_path + "\\bg", "pre_bg_")
             rename(OsuWRS_path + "\\bg", "bg_")
@@ -69,17 +69,17 @@ def bg_check():
 
 # 解锁bg&删除旧bg
 def bg_update():
-    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f')
+    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f > nul')
     for bg_file in glob.glob(bgPath + "\\" + "*.jpg"):
         os.remove(bg_file)
 
 
 # 锁定bg&替换新bg
 def bg_replace():
-    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f')
-    os.system('md ' + Path + '\\Data\\bg_temp')
-    os.system('copy "' + OsuWRS_path + '\\bg\\*.jpg" "' + Path + '\\Data\\bg_temp"')
-    os.system('cls' if os.name == 'nt' else 'clear')
+
+    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:f > nul')
+    os.system('md ' + Path + '\\Data\\bg_temp > nul')
+    os.system('copy "' + OsuWRS_path + '\\bg\\*.jpg" "' + Path + '\\Data\\bg_temp" > nul')
 
     num = 1
     for Osu_bg in glob.glob(bgPath + "\\" + "*.jpg"):
@@ -89,8 +89,8 @@ def bg_replace():
             break
         num += 1
 
-    os.system('rd /s /q ' + bgTempPath)
-    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:r')
+    os.system('rd /s /q ' + bgTempPath + ' > nul')
+    os.system('echo y|cacls ' + bgPath + ' /t /p everyone:r > nul')
 
 
 #  多线程 | bg刷新检测&剩余的步骤
@@ -99,7 +99,6 @@ def thread_main():
     e = 0  # 错误计数
     n = get_bg_num()
     global stop_threads
-    os.system('cls' if os.name == 'nt' else 'clear')
     print("[!] 提示: 请确保你的鼠标焦点位于osu!上, 不要移动!")
     while n != bg_num:
         n = get_bg_num()
@@ -116,18 +115,18 @@ def thread_main():
             # 声明退出virtual_key线程
             stop_threads = True
             # 腾空屏幕为显示log准备
-            os.system("taskkill /F /IM osu!.exe")
+            os.system("taskkill /F /IM osu!.exe > nul")
             with open("error.log", "w") as file:
                 file.write('[Error] 不要超过ppy的服务器上限! 目前是最高' + str(n) + '张可替换的bg图 | 或者检查您的网络')
             win32api.ShellExecute(0, 'open', OsuWRS_path + "\\bg", '', '', 1)
             time.sleep(2)
             win32api.ShellExecute(0, 'open', OsuWRS_path + "\\error.log", '', '', 1)
             exit()
-
-    # 杀死osu
-    os.system("taskkill /F /IM osu!.exe")
     # 声明退出virtual_key线程
     stop_threads = True
+    time.sleep(0.01)
+    # 杀死osu
+    os.system("taskkill /F /IM osu!.exe > nul")
     # ------------------------------------------------------
     # 检查待替换bg
     bg_check()
@@ -137,7 +136,6 @@ def thread_main():
     with open("bg.php", "wb") as file:
         file.write(ppyUrl)
     # 启动osu(替换成功后)
-    os.system('cls' if os.name == 'nt' else 'clear')
     print("[+] 状态: 更新成功!")
     time.sleep(1)
     win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
@@ -178,12 +176,12 @@ if quick_start == 1:
 # 获取ppy数据&本地数据
 while True:
     try:
-        print("[+] 状态: 正在连接osu服务器")
+        print("[+] 状态: 正在连接osu!服务器")
         ppyUrl = requests.get("https://osu.ppy.sh/web/osu-getseasonal.php", timeout=overtime).text.encode()  # ppy数据
         print("[+] 状态: 获取bg信息成功")
         break
     except requests.exceptions.RequestException:  # 蚌埠住了
-        print("[-] 连接osu服务器超时")
+        print("[-] 连接osu!服务器超时")
 while True:
     try:
         with open("bg.php", 'r') as f:  # 原数据
@@ -197,17 +195,18 @@ while True:
 # 数据变化判断
 if ppyUrl != ppyUrlOld:  # seasonal background 更新后开始进行 bg更新
     # 杀死osu 当前启动的osu
-    os.system("taskkill /F /IM osu!.exe")
+    os.system("taskkill /F /IM osu!.exe > nul")
     # 删除旧图&开放权限
     bg_update()
     # 拉起osu
     win32api.ShellExecute(0, 'open', osuPath, '', '', 1)
-    time.sleep(3)
+    time.sleep(5)
     # 对osu启动的检测
     getnum = 0
     while getnum == 0:
         getnum = get_bg_num()
         time.sleep(0.1)
+    print("[+] 进度: 成功启动osu!")
     time.sleep(3)
 
     # 尝试多进程以减少失误
