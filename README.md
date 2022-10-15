@@ -30,6 +30,10 @@ pip install pywin32
 
 运行 `osuWRS.py`(推荐) or `osuWRS.exe`
 
+## 教程
+
+[教程地址](https://www.bilibili.com/video/BV1eq4y1g7sT/) | [新版教程](https://www.bilibili.com/video/BV1o8411s7Bf/)
+
 ## 关注我
 [Github](https://github.com/Windla) | [Bilibili](https://space.bilibili.com/358002685)
 
