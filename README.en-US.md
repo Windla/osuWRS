@@ -17,7 +17,7 @@ Supported OS: Only Windows
 Need `Python` | [Download](https://www.python.org/downloads/)
 
 ## Download
-[Releases](https://github.com/Windla/osuWRS/releases) | [Clone](https://github.com/Windla/osuWRS/archive/refs/heads/master.zip)
+[Releases](https://github.com/Windla/osuWRS/releases)(recommended) | [Clone](https://github.com/Windla/osuWRS/archive/refs/heads/master.zip)
 
 ## Install
 
