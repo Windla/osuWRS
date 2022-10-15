@@ -1,7 +1,12 @@
 # OsuWRS
-Osu Wallpaper Replace Script
+osu Wallpaper Replace Script
 
 一个用于替换osu背景的脚本(Python+Batchfile)
+
+![GitHub](https://img.shields.io/github/license/windla/osuwrs)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/windla/osuwrs)
+![GitHub Repo stars](https://img.shields.io/github/stars/windla/osuwrs)
+![GitHub all releases](https://img.shields.io/github/downloads/windla/osuwrs/total)
 
 支持平台: Windows
 
