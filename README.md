@@ -32,4 +32,5 @@ osu Wallpaper Replace Script
 
 
 ## 你的Star是我更新的动力! 不要忘了去b站关注我:D
-[![Stargazers over time](https://starchart.cc/Windla/OsuWRS.svg)](https://starchart.cc/Windla/OsuWRS)
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=Windla/osuWRS&type=Date)](https://star-history.com/#Windla/osuWRS&Date)
