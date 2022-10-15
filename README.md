@@ -8,7 +8,7 @@
 
 > 自定义osu!主页背景脚本(无需supporter标签)
 
-[Github](https://github.com/Windla/osuWRS) | [English README](https://github.com/Windla/osuWRS/blob/master/README.en_US.md)
+[Github](https://github.com/Windla/osuWRS) | [English README](https://github.com/Windla/osuWRS/blob/master/README.en-US.md)
 
 ## 注意
 
