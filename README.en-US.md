@@ -10,6 +10,10 @@
 
 [Github](https://github.com/Windla/osuWRS) | [中文README](https://github.com/Windla/osuWRS/blob/master/README.md)
 
+## Notice
+
+Supported OS: Only Windows
+
 ## Install
 
 Need `Python` | [Download](https://www.python.org/downloads/)
