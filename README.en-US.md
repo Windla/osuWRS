@@ -14,9 +14,10 @@
 
 Supported OS: Only Windows
 
+Need `Python` | [Download](https://www.python.org/downloads/)
+
 ## Install
 
-Need `Python` | [Download](https://www.python.org/downloads/)
 ```
 pip install requests
 pip install pywin32
