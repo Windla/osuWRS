@@ -32,6 +32,13 @@ pip install pywin32
 
 运行 `osuWRS.py`(推荐) or `osuWRS.exe`
 
+## 功能
+
+- [x] 全自动
+- [x] 多图替换
+- [ ] 云替换
+- [ ] 代码优化
+
 ## 教程
 
 [教程地址](https://www.bilibili.com/video/BV1eq4y1g7sT/) | [新版教程](https://www.bilibili.com/video/BV1o8411s7Bf/)
