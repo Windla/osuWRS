@@ -10,7 +10,7 @@ from threading import Thread
 
 QUICK_START = 1  # 快速启动  0：关闭 1:开启 | 默认 0
 OVERTIME = 5  # 连接ppy服务器超时时间 | 默认 5
-VERSION = "2.2.1"  # 当前osuWRS版本号
+VERSION = "2.2.2"  # 当前osuWRS版本号
 osuWRS_path = os.getcwd()  # 获取osuWRS工作目录
 stop_threads = False  # 全局变量 virtual_key 线程运行&退出 | True: 不进行按键模拟
 
