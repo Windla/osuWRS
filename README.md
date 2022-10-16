@@ -16,6 +16,8 @@
 
 需要 `Python` | [下载](https://www.python.org/downloads/)
 
+> 警告: 是Python初学者 想写啥就学啥 面向浏览器编程 不建议学习屎(源码)
+
 ## 下载
 [Releases(推荐)](https://github.com/Windla/osuWRS/releases) | [Clone](https://github.com/Windla/osuWRS/archive/refs/heads/master.zip)
 
