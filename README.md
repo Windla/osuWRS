@@ -46,7 +46,7 @@ pip install pywin32
 ## 关注我
 [Github](https://github.com/Windla) | [Bilibili](https://space.bilibili.com/358002685)
 
-## 你的Star是我更新的动力! 不要忘了去b站关注我:D
+## 你的Star是我更新的动力! 如果能关注就更好了:D
 [![Star History Chart](https://api.star-history.com/svg?repos=Windla/osuWRS&type=Date)](https://star-history.com/#Windla/osuWRS&Date)
 
 ## 许可证
