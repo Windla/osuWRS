@@ -8,7 +8,7 @@
 
 > osu Wallpaper Replace Script(Don't need supporter tag)
 
-[Github](https://github.com/Windla/osuWRS) | [What's New](https://github.com/Windla/osuWRS/releases) | [中文README](https://github.com/Windla/osuWRS/blob/master/README.md)
+[Github](https://github.com/Windla/osuWRS) | [What's New](https://github.com/Windla/osuWRS/releases) | [中文 README](https://github.com/Windla/osuWRS/blob/master/README.md)
 
 ## Notice
 
