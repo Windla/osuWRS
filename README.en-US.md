@@ -3,8 +3,7 @@
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 ![GitHub](https://img.shields.io/github/license/windla/osuwrs)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/windla/osuwrs)
-![GitHub Repo stars](https://img.shields.io/github/stars/windla/osuwrs)
-![GitHub all releases](https://img.shields.io/github/downloads/windla/osuwrs/total)
+![GitHub file size in bytes](https://img.shields.io/github/size/Windla/osuWRS/osuWRS.exe)
 
 > osu Wallpaper Replace Script(Don't need supporter tag)
 
