@@ -4,7 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/windla/osuwrs)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/windla/osuwrs)
 ![GitHub file size in bytes](https://img.shields.io/github/size/Windla/osuWRS/osuWRS.exe)
-
+[![State-of-the-art Shitcode](https://img.shields.io/static/v1?label=State-of-the-art&message=Shitcode&color=7B5804)](https://github.com/trekhleb/state-of-the-art-shitcode)
 
 > 自定义osu!主页背景脚本(无需supporter标签)
 
