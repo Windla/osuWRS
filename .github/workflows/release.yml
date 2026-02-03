@@ -27,6 +27,8 @@ jobs:
       - name: Build with Nuitka
         run: |
           python build_nuitka.py
+        env:
+          PYTHONUTF8: 1
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
