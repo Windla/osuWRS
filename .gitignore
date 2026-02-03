@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+*venv*/
+
+# Distribution / Build
+dist/
+build/
+*.spec
+.cache/
+nuitka-crash-report.xml
+
+# IDEs
+.idea/
+.vscode/
+
+# Local configuration / Data
+config.ini
+bg/
+bg.*
+
+# Logs and temporary files
+*.bak
+*.log
+
