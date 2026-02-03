@@ -440,7 +440,7 @@ autoSet = off
                 logger.error(f"部署失败 {bg_info['filename']}: {e}")
 
         # 4. 锁定权限
-        self.manage_permissions(lock=True)
+        # self.manage_permissions(lock=True)
         
         # 5. 保存状态
         try:
@@ -449,7 +449,8 @@ autoSet = off
         except Exception as e:
             logger.error(f"保存缓存失败: {e}")
             
-        logger.info("替换完成，目录已锁定。")
+        # logger.info("替换完成，目录已锁定。")
+        logger.info("替换完成。")
         time.sleep(1)
         
         if self.quick_start:
