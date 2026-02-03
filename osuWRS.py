@@ -44,6 +44,9 @@ class OsuWRS:
         self.ensure_config(config_path)
         self.config = configparser.ConfigParser()
         self.config.read(config_path, encoding='utf-8')
+
+        # 同步配置文件版本号
+        self.sync_config_version(config_path)
         
         self.osu_path = self.config.get('osu', 'path', fallback=self.find_osu_path())
         self.quick_start = self.config.getboolean('osu', 'quickStart', fallback=True)
@@ -148,6 +151,24 @@ autoSet = off
             logger.info(f"已生成默认配置文件: {config_path}")
         except Exception as e:
             logger.error(f"生成配置文件失败: {e}")
+
+    def sync_config_version(self, config_path: str):
+        """同步配置文件中的版本号，确保与当前程序版本一致 (使用文本替换以保留注释)"""
+        try:
+            config_version = self.config.get('osuWRS', 'version', fallback='')
+            if config_version != self.version:
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    for line in lines:
+                        if line.strip().startswith('version'):
+                            f.write(f"version = {self.version}\n")
+                        else:
+                            f.write(line)
+                logger.info(f"配置文件版本号已同步: {config_version} -> {self.version}")
+        except Exception as e:
+            logger.warning(f"同步配置文件版本号失败: {e}")
 
     def check_config_settings(self):
         """检查并根据需要自动修改 osu! 游戏客户端的配置文件（.cfg），确保季节背景功能开启"""
@@ -334,17 +355,18 @@ autoSet = off
         subprocess.run("taskkill /F /IM osu!.exe /T", shell=True, capture_output=True)
 
     def launch_osu(self):
-        """启动 osu!"""
-        if os.path.exists(self.osu_exe):
-            try:
-                # 尝试使用 win32api 如果存在 (为了更好的兼容性)
-                import win32api
-                win32api.ShellExecute(0, 'open', self.osu_exe, '', '', 1)
-            except ImportError:
-                # 否则使用标准库
-                os.startfile(self.osu_exe)
-        else:
+        """启动 osu! 客户端"""
+        if not os.path.exists(self.osu_exe):
             logger.error(f"找不到 osu!.exe: {self.osu_exe}")
+            return
+
+        try:
+            # os.startfile 是 Windows 下启动程序的标准方式，等效于双击运行。
+            # 它在底层调用 ShellExecute，且不会阻塞 Python 进程。
+            os.startfile(self.osu_exe)
+            logger.info("已尝试启动 osu! 客户端")
+        except Exception as e:
+            logger.error(f"启动 osu! 失败: {e}")
 
     def run_replacement_cycle(self):
         """执行完整的替换周期：同步信息 -> 停止进程 -> 修改权限 -> 文件替换 -> 锁定权限 -> 启动游戏"""
